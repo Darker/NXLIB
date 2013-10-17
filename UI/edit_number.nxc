@@ -1,0 +1,46 @@
+void menCislo(int &cislo, const int &step, const int &max, const int &min) {
+  bool looping = false;
+  //Eventuelne pockat na pusteni cudliku
+  while(ButtonState(BTNCENTER));
+
+  while(!ButtonState(BTNCENTER)) {
+    RectOut(0,0,DISPLAY_WIDTH,DISPLAY_HEIGHT,DRAW_OPT_FILL_SHAPE|DRAW_OPT_INVERT);
+    string display;
+    //Nezobrazovat +/- pokud sme na hranici
+    if(cislo==max)
+      display = FormatNum("- %d  ", cislo);
+    else if(cislo==min)
+      display = FormatNum("  %d +", cislo);
+    else
+      display = FormatNum("- %d +", cislo);
+    TextOut((DISPLAY_WIDTH-strlen(display)*6)/2, (DISPLAY_HEIGHT-8)/2, display);
+    //Pockat na zmacknuti sipky nebo enteru
+    while(!ButtonState(BTNLEFT)&&!ButtonState(BTNRIGHT)&&!ButtonState(BTNCENTER));
+    //Po enteru skoncit
+    if(ButtonState(BTNCENTER))
+      return;
+    
+    if(ButtonState(BTNLEFT)) {
+      cislo-=step;
+      if(cislo<min)
+        cislo=min;
+    }
+    else if(ButtonState(BTNRIGHT)) {
+      cislo+=step;
+      if(cislo>max)
+        cislo=max;
+    }
+    //Opet pockat na pusteni tlacitka
+    unsigned long time = looping?CurrentTick()+200:CurrentTick()+500;  //Kratsi cas pri protaceni
+    while(ButtonState(BTNLEFT)||ButtonState(BTNRIGHT)) {
+      if(CurrentTick()>time) {
+        looping=true;
+        break;
+      }
+    }
+    //Ukoncit protaceni pri pusteni cudliku
+    if(!ButtonState(BTNLEFT)&&!ButtonState(BTNRIGHT))
+      looping=false;
+  }
+
+}
