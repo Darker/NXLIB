@@ -1,0 +1,15 @@
+#include "../UI/menu.nxc"
+task main() {
+  string items[] = {"aaa", "bbb", "ccc", "ddd", "eee", "fff", "ggg", "hhh", "iii", "jjj", "EXIT"};
+  int pos = Random(ArrayLen(items));  //Start on random item
+  while(1) {
+     //Generate menu and wait for item selection
+     MenuWait("MENU", items, pos);
+     //Break if EXIT was selected
+     if(pos==10)
+       break;
+     //Print index of selected item - replace this with switch-case
+     TextOut(0, LCD_LINE5, FormatNum("%d selected.", pos));
+     Wait(1000);
+  }
+}
