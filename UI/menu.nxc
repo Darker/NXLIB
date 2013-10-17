@@ -1,0 +1,92 @@
+void DrawMenu(const string &caption, const string &items[], const byte &sel_item);
+void TextOutRepeat(const int &x, const int &y, const string &text, const byte &count);
+void MenuWait(const string &caption, const string &items[], byte &pos);
+
+void MenuWait(const string &caption, const string &items[], byte &pos) {
+  const int loop_delay = 800;    //Doba nez se menu zacne pri drzeni cudliku protacet
+  const int max_rage = 100;      //Nejmensi prodleva mezi polozkami
+  int loop_rage = 0;             //Pokud se menu protaci, diky tehle promenne bude zrychlovat
+  
+  //Pockat, nez se uvolni prostredni cudlik (pokud je zmacknuty)
+  while(ButtonState(BTNCENTER));
+  while(1) {
+    //Vykresleni menu
+    DrawMenu(caption, items, pos);
+    //cekani na cudlik
+    while(!ButtonState(BTNLEFT)&&!ButtonState(BTNRIGHT)&&!ButtonState(BTNCENTER));
+    //Exit
+    if(ButtonState(BTNCENTER)) {
+      //Pred ukoncenim po sobe vymazat obrazovku
+        //RectOut(0,0,DISPLAY_WIDTH,DISPLAY_HEIGHT,DRAW_OPT_FILL_SHAPE|DRAW_OPT_INVERT);
+      return;
+    }
+    else {
+      if(ButtonState(BTNLEFT)) {
+        //Byte je unsigned, takze pretaceni se musi osetrit ifem
+        if(pos==0) {
+          pos = ArrayLen(items)-1;
+        }
+        else {
+          pos--;
+        }
+      }
+      else {
+        pos++;
+      }
+      if(pos>=ArrayLen(items))
+        pos=0;
+    }
+
+    //Zapamatovat si cas, ve kterem je treba skoncit
+    unsigned long time = CurrentTick()+loop_delay-loop_rage;
+    while(ButtonState(BTNLEFT)||ButtonState(BTNRIGHT)) {
+      if(CurrentTick()>time) {
+        //Zrychlit o *** sekundy pri kazdem protoceni
+        if(loop_delay-loop_rage>max_rage)
+          loop_rage+=(loop_delay-loop_rage)/2;
+        //Skoncit i kdyz je cudlik furt zmacknuty
+        break;
+      }
+    }
+    //Pokud jsou cudliky pustene, resetovat zrychleni menu
+    if(!ButtonState(BTNLEFT)&&!ButtonState(BTNRIGHT))
+      loop_rage=0;
+  }
+}
+void DrawMenu(const string &caption, const string &items[], const byte &sel_item) {
+  //Vykreslit nadpis - >>>>NADPIS<<<<
+  byte chars = 0;
+  if(strlen(caption)<16) {
+    chars = ceil((16-strlen(caption))/2); //Pocet znacek z kazde strany
+    TextOutRepeat(0, LCD_LINE1, ">", chars);
+    TextOutRepeat((chars+strlen(caption))*6, LCD_LINE1, "<", chars);
+  }
+  //Text nadpisu se vypise az po znackach
+  TextOut(6*chars, LCD_LINE1, caption);
+  //Zjistit pocet polozek menu
+  byte len = ArrayLen(items);
+  //Zjistit, zda se vejdou na display
+  byte offset = 0;
+  if(len>7&&sel_item>4) {  //Na display se vejde 7 polozek
+    offset=sel_item-4;     //Po 4te polozce zacneme nenu posouvat
+    if(offset+7>len)       //Neposouvat pokud nejsou nize dalsi polozky k zobrazeni
+      offset=len-7;
+  }
+  for(byte i=offset; i<7+offset&&i<len; i++) {
+    int line_top=DISPLAY_HEIGHT-(i-offset)*8-16; //Display je cislovany odzdola nahoru - 0=uplne dole
+    TextOut(0,                    //X pozice - uplne vlevo
+            line_top,
+            items[i],             //Text polozky
+            i==sel_item?DRAW_OPT_INVERT:0  //Pokud je i rovno vybrane polozce, bude text inverzni
+     );
+     /*Tmava plocha u vybrane polozky*/
+     RectOut(strlen(items[i])*6,line_top,DISPLAY_WIDTH,7, DRAW_OPT_FILL_SHAPE|(i==sel_item?0:DRAW_OPT_INVERT));  //vyska jen 7!
+
+  }
+
+}
+//Vypise jeden znak count-krat za sebe
+void TextOutRepeat(const int &x, const int &y, const string &text, const byte &count) {
+  for(byte i=0; i<count; i++)
+    TextOut(x+i*6, y, text);
+}
