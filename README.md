@@ -7,5 +7,5 @@ Contents:
 =========
 
  - */UI* UI libraries
-    - */menu.nxc* Menu UI library
+   - */menu.nxc* Menu UI library
     - ddd
