@@ -33,7 +33,7 @@ Read **LICENSE**.
 Documentation:
 --------------
 
-At the moment there isn't any documentation for the libraries (a part from this file).
+At the moment there isn't any documentation for the libraries (apart from this file).
 To understand how a particular function works you can read the code and the comments in the source file.
 If you would like to write some documentation for the libraries feel free to start a pull request.
 
