@@ -54,4 +54,4 @@ Contributing:
 -------------
 
 Want to contribute?
-Open a pull request. Every contribution must be licensed under the terms of the GNU General Public License v3.
+Open a pull request. Every contribution must be licensed under the terms of the GNU General Public License v2.
