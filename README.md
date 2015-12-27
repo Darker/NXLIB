@@ -1,7 +1,7 @@
-NXC
-===
+NXLIB
+=====
 
-Source codes, examples and libraries for NXT lego brick
+NXLIB (Not eXactly LIBraries) is a collection of useful libraries for the LEGO NXT brick written in NXC programming language.
 
 Contents:
 ---------
