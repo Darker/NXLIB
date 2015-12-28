@@ -23,7 +23,9 @@ To use one of the features offered by these libraries inside a program follow th
  - Compile and donwload the program to your brick.
  - Enjoy your program!
 
-The libraries and the example works with the Bricx Command Center version 3.3, but they should have no problem with any other program/environment.
+The libraries and the example works with the Bricx Command Center version 3.3 on Windows, but they should have no problem with any other program/environment.
+
+**UPDATE:** I tested the libraries on Linux compiling with NBC from command line and the compiler gives some errors. I'll try to solve the problem as soon as possible.
 
 License:
 --------
