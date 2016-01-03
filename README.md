@@ -40,11 +40,6 @@ To understand how a particular function works you can read the code and the comm
 If you would like to write some documentation for the libraries feel free to start a pull request.
 
 To learn about the NXC language I recommend you read [this] (http://bricxcc.sourceforge.net/nbc/nxcdoc/NXC_tutorial.pdf) tutorial. For a complete reference take a look [here] (http://bricxcc.sourceforge.net/nbc/nxcdoc/nxcapi/).
-   
-History:
---------
-
-This project is a fork of [NXC] (https://github.com/Darker/NXC).
 
 Bugs:
 -----
