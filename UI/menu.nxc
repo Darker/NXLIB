@@ -1,12 +1,14 @@
 /*
-* Jakub Mareda
+* menu.nxc
 *
-* <jmareda@seznam.cz>
+* A library to display menus on the NXT screen.
 *
-* Menu rendering function and menu loop function. These functions 
-* may be used to generate a menu from an array of item names and a caption.
-* See examples/menu_test.nxc
-* Include this using standart #iclude statement.
+* Menu rendering function and menu loop function. These functions
+* may be used to generate a menu from an array of items and a caption.
+*
+* See examples/menu_test.nxc for an example on how to use this library.
+*
+* To include this file use the #include statement.
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as
@@ -28,26 +30,26 @@ void TextOutRepeat(const int &x, const int &y, const string &text, const byte &c
 void MenuWait(const string &caption, const string &items[], byte &pos);
 
 void MenuWait(const string &caption, const string &items[], byte &pos) {
-  const int loop_delay = 800;    //Doba nez se menu zacne pri drzeni cudliku protacet
-  const int max_rage = 100;      //Nejmensi prodleva mezi polozkami
-  int loop_rage = 0;             //Pokud se menu protaci, diky tehle promenne bude zrychlovat
-  
-  //Pockat, nez se uvolni prostredni cudlik (pokud je zmacknuty)
+  const int loop_delay = 800;    //waiting time before the loop starts
+  const int max_rage = 100;      //The delay between menu entries
+  int loop_rage = 0;             //If the button is pressed for some time, this var is used to accelerate the scrolling
+
+  //Wait for the release of the center button (if pressed)
   while(ButtonState(BTNCENTER));
   while(1) {
-    //Vykresleni menu
+    //Display the menu
     DrawMenu(caption, items, pos);
-    //cekani na cudlik
+    //Wait until a button is pressed
     while(!ButtonState(BTNLEFT)&&!ButtonState(BTNRIGHT)&&!ButtonState(BTNCENTER));
     //Exit
     if(ButtonState(BTNCENTER)) {
-      //Pred ukoncenim po sobe vymazat obrazovku
+      //To clear the screen before exiting the loop
         //RectOut(0,0,DISPLAY_WIDTH,DISPLAY_HEIGHT,DRAW_OPT_FILL_SHAPE|DRAW_OPT_INVERT);
       return;
     }
     else {
       if(ButtonState(BTNLEFT)) {
-        //Byte je unsigned, takze pretaceni se musi osetrit ifem
+        //Go to the last menu entry when you are on the first one
         if(pos==0) {
           pos = ArrayLen(items)-1;
         }
@@ -62,55 +64,53 @@ void MenuWait(const string &caption, const string &items[], byte &pos) {
         pos=0;
     }
 
-    //Zapamatovat si cas, ve kterem je treba skoncit
     unsigned long time = CurrentTick()+loop_delay-loop_rage;
     while(ButtonState(BTNLEFT)||ButtonState(BTNRIGHT)) {
       if(CurrentTick()>time) {
-        //Zrychlit o *** sekundy pri kazdem protoceni
+        //Accelerate each time
         if(loop_delay-loop_rage>max_rage)
           loop_rage+=(loop_delay-loop_rage)/2;
-        //Skoncit i kdyz je cudlik furt zmacknuty
         break;
       }
     }
-    //Pokud jsou cudliky pustene, resetovat zrychleni menu
+    //Reset acceleration when button is released
     if(!ButtonState(BTNLEFT)&&!ButtonState(BTNRIGHT))
       loop_rage=0;
   }
 }
 void DrawMenu(const string &caption, const string &items[], const byte &sel_item) {
-  //Vykreslit nadpis - >>>>NADPIS<<<<
+  //Create the title - >>>>TITLE<<<<
   byte chars = 0;
   if(strlen(caption)<16) {
-    chars = ceil((16-strlen(caption))/2); //Pocet znacek z kazde strany
+    chars = ceil((16-strlen(caption))/2); //Number of symbols on the sides of the title
     TextOutRepeat(0, LCD_LINE1, ">", chars);
     TextOutRepeat((chars+strlen(caption))*6, LCD_LINE1, "<", chars);
   }
-  //Text nadpisu se vypise az po znackach
+  //Display the title
   TextOut(6*chars, LCD_LINE1, caption);
-  //Zjistit pocet polozek menu
+  //Check the number of menu entries
   byte len = ArrayLen(items);
-  //Zjistit, zda se vejdou na display
+  //Check if all the entries can be displayed on the screen
   byte offset = 0;
-  if(len>7&&sel_item>4) {  //Na display se vejde 7 polozek
-    offset=sel_item-4;     //Po 4te polozce zacneme nenu posouvat
-    if(offset+7>len)       //Neposouvat pokud nejsou nize dalsi polozky k zobrazeni
+  if(len>7&&sel_item>4) {  //The screen can display up to 7 entries
+    offset=sel_item-4;     //After the 4th entry the menu starts scrolling
+    if(offset+7>len)       //Doesn't scroll unless there are other items to display
       offset=len-7;
   }
   for(byte i=offset; i<7+offset&&i<len; i++) {
-    int line_top=DISPLAY_HEIGHT-(i-offset)*8-16; //Display je cislovany odzdola nahoru - 0=uplne dole
-    TextOut(0,                    //X pozice - uplne vlevo
+    int line_top=DISPLAY_HEIGHT-(i-offset)*8-16; //Display is numbered from bottom to top (0 = first from the bottom)
+    TextOut(0,                    //X position: totally left
             line_top,
-            items[i],             //Text polozky
-            i==sel_item?DRAW_OPT_INVERT:0  //Pokud je i rovno vybrane polozce, bude text inverzni
+            items[i],             //The text of the menu entry
+            i==sel_item?DRAW_OPT_INVERT:0  //If the item is equal to the current selected, the text is inverted (white)
      );
-     /*Tmava plocha u vybrane polozky*/
-     RectOut(strlen(items[i])*6,line_top,DISPLAY_WIDTH,7, DRAW_OPT_FILL_SHAPE|(i==sel_item?0:DRAW_OPT_INVERT));  //vyska jen 7!
+     /*The dark area for the current entry selector*/
+     RectOut(strlen(items[i])*6,line_top,DISPLAY_WIDTH,7, DRAW_OPT_FILL_SHAPE|(i==sel_item?0:DRAW_OPT_INVERT));  //selector height: 7
 
   }
 
 }
-//Vypise jeden znak count-krat za sebe
+//Repeat a string n-times (count)
 void TextOutRepeat(const int &x, const int &y, const string &text, const byte &count) {
   for(byte i=0; i<count; i++)
     TextOut(x+i*6, y, text);

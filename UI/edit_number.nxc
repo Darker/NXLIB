@@ -1,44 +1,76 @@
-void menCislo(int &cislo, const int &step, const int &max, const int &min) {
+/*
+* edit_number.nxc
+*
+* This library provide a function to edit a number.
+*
+* The function takes as arguments the int variable to edit,
+* the step value used to increase or decrease the value,
+* a maximum value and a minimum value.
+*
+* This program is free software; you can redistribute it and/or
+* modify it under the terms of the GNU General Public License
+* as published by the Free Software Foundation; either version 2
+* of the License, or (at your option) any later version.
+
+* This program is distributed in the hope that it will be useful,
+* but WITHOUT ANY WARRANTY; without even the implied warranty of
+* MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+* GNU General Public License for more details.
+
+* You should have received a copy of the GNU General Public License
+* along with this program; if not, write to the Free Software
+* Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
+*
+*/
+
+void editNumber(int &number, const int &step, const int &max, const int &min) {
   bool looping = false;
-  //Eventuelne pockat na pusteni cudliku
+  //Wait for the release of the center button (if pressed)
   while(ButtonState(BTNCENTER));
 
   while(!ButtonState(BTNCENTER)) {
+    //clear the display
     RectOut(0,0,DISPLAY_WIDTH,DISPLAY_HEIGHT,DRAW_OPT_FILL_SHAPE|DRAW_OPT_INVERT);
     string display;
-    //Nezobrazovat +/- pokud sme na hranici
-    if(cislo==max)
-      display = FormatNum("- %d  ", cislo);
-    else if(cislo==min)
-      display = FormatNum("  %d +", cislo);
+    //Show only '-' or '+' if max or min are reached
+    if(number==max)
+      display = FormatNum("- %d  ", number);
+    else if(number==min)
+      display = FormatNum("  %d +", number);
     else
-      display = FormatNum("- %d +", cislo);
+      display = FormatNum("- %d +", number);
     TextOut((DISPLAY_WIDTH-strlen(display)*6)/2, (DISPLAY_HEIGHT-8)/2, display);
-    //Pockat na zmacknuti sipky nebo enteru
+    //Wait until left, right or center button is pressed
     while(!ButtonState(BTNLEFT)&&!ButtonState(BTNRIGHT)&&!ButtonState(BTNCENTER));
-    //Po enteru skoncit
+    //Exit when center button is pressed
     if(ButtonState(BTNCENTER))
       return;
-    
+
+    //Decrease the number by step if left button is pressed
     if(ButtonState(BTNLEFT)) {
-      cislo-=step;
-      if(cislo<min)
-        cislo=min;
+      number-=step;
+      if(number<min)
+        number=min;
     }
+    
+    //Increase the number by step if right button is pressed
     else if(ButtonState(BTNRIGHT)) {
-      cislo+=step;
-      if(cislo>max)
-        cislo=max;
+      number+=step;
+      if(number>max)
+        number=max;
     }
-    //Opet pockat na pusteni tlacitka
-    unsigned long time = looping?CurrentTick()+200:CurrentTick()+500;  //Kratsi cas pri protaceni
+    
+    //Wait some time before continuing,
+    //wait 500ms if the button was pressed and released immediatly released
+    //wait 200ms if the button was already pressed in the previous loop iteration
+    unsigned long time = looping?CurrentTick()+200:CurrentTick()+500;
     while(ButtonState(BTNLEFT)||ButtonState(BTNRIGHT)) {
       if(CurrentTick()>time) {
         looping=true;
         break;
       }
     }
-    //Ukoncit protaceni pri pusteni cudliku
+    //Stop the speed increase/decrease if the button is released
     if(!ButtonState(BTNLEFT)&&!ButtonState(BTNRIGHT))
       looping=false;
   }
