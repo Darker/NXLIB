@@ -1,7 +1,8 @@
 /*
 * edit_number.nxc
 *
-* This library provide a function to edit a number.
+* This library provide a function that displays a UI to edit
+* a number.
 *
 * The function takes as arguments the int variable to edit,
 * the step value used to increase or decrease the value,
