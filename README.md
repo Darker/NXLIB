@@ -10,7 +10,7 @@ Contents:
 
  - **/UI** UI libraries
    - **/menu.nxc** Menu UI library
-   - **/edit_number.nxc** Displays UI for editing number with arrow keys
+   - **/edit_number.nxc** a UI for editing number with arrow keys
  - **/examples** Example files
    - **/menu_test.nxc** Demonstration of menu UI
     
@@ -37,7 +37,7 @@ Documentation:
 
 At the moment there isn't any documentation for the libraries (apart from this file).
 To understand how a particular function works you can read the code and the comments in the source file.
-If you would like to write some documentation for the libraries feel free to start a pull request.
+If you would like to write some documentation for the libraries feel free to make a pull request.
 
 To learn about the NXC language I recommend you read [this] (http://bricxcc.sourceforge.net/nbc/nxcdoc/NXC_tutorial.pdf) tutorial. For a complete reference take a look [here] (http://bricxcc.sourceforge.net/nbc/nxcdoc/nxcapi/).
 
@@ -45,10 +45,10 @@ Bugs:
 -----
 
 Found a bug?
-Create an issue here on GitHub describing well the problem and adding some additonal info as the compiler you are using or your OS.
+Create an issue here on GitHub describing well the problem and adding some additonal info as the compiler you are using and your OS.
 
 Contributing:
 -------------
 
 Want to contribute?
-Open a pull request. Every contribution must be licensed under the terms of the GNU General Public License v2.
+Open a pull request. Every contribution must be licensed under the terms of the GNU General Public License v2 or later.
