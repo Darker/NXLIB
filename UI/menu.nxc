@@ -1,14 +1,13 @@
 /*
 * menu.nxc
 *
-* A library to display menus on the NXT screen.
+* A library to display a scrolling menu on the NXT screen.
 *
-* Menu rendering function and menu loop function. These functions
-* may be used to generate a menu from an array of items and a caption.
+* The library includes a menu rendering function and a menu loop 
+* function. These functions can be used to generate a menu from 
+* an array of items and a caption.
 *
 * See examples/menu_test.nxc for an example on how to use this library.
-*
-* To include this file use the #include statement.
 *
 * This program is free software; you can redistribute it and/or
 * modify it under the terms of the GNU General Public License as
