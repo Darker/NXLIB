@@ -13,6 +13,7 @@ Contents:
    - **/edit_number.nxc** a UI for editing number with arrow keys
  - **/examples** Example files
    - **/menu_test.nxc** Demonstration of menu UI
+   - **/edit_number_test.nxc** Demonstration of edit_number
     
 Usage:
 ------
