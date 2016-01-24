@@ -24,7 +24,7 @@
 *
 */
 
-void editNumber(int &number, const int &step, const int &max, const int &min) {
+void EditNumber(int &number, const int &step, const int &max, const int &min) {
   bool looping = false;
   //Wait for the release of the center button (if pressed)
   while(ButtonState(BTNCENTER));
