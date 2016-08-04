@@ -20,7 +20,7 @@ Usage:
 
 To use one of the features offered by these libraries inside a program follow these simple steps:
  - Download the entire repository or the needed library;
- - Add this line on the top of your program: "#include path/to/lib/file.nxc" (without quotes and replacing the path with the relative path of the library program.
+ - Add this line on the top of your program: "#include path/to/lib/file.nxc" (without quotes and replacing the path with the relative path of the library program).
  - Compile and donwload the program to your brick.
  - Enjoy your program!
 
